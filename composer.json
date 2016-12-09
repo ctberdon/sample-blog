@@ -1,14 +1,17 @@
 {
-	"description": "The CodeIgniter framework",
-	"name": "codeigniter/framework",
+	"description": "A demo blog for client",
+	"name": "ctberdon/sample-blog",
 	"type": "project",
-	"homepage": "https://codeigniter.com",
+	"homepage": "https://github.com/ctberdon/sample-blog.git",
 	"license": "MIT",
+    "authors": [
+        {
+            "name": "Carmencito Berdon",
+            "email": "ctberdon@gmail.com"
+        }
+    ],
 	"support": {
-		"forum": "http://forum.codeigniter.com/",
-		"wiki": "https://github.com/bcit-ci/CodeIgniter/wiki",
-		"irc": "irc://irc.freenode.net/codeigniter",
-		"source": "https://github.com/bcit-ci/CodeIgniter"
+		"source": "https://github.com/ctberdon/sample-blog.git"
 	},
 	"require": {
 		"php": ">=5.2.4"
