@@ -1,0 +1,37 @@
+<?php
+
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class MY_Controller extends CI_Controller
+{
+    function __construct()
+    {
+        parent::__construct();
+    }
+}
+
+class Public_Controller extends MY_Controller
+{
+    function __construct()
+    {
+        parent::__construct();
+        
+        if ( true === $this->session->userdata('logged_in'))
+        {
+            redirect('user');
+        }
+    }
+}
+
+class Private_Controller extends MY_Controller
+{
+    function __construct()
+    {
+        parent::__construct();
+        
+        if ( true !== $this->session->userdata('logged_in'))
+        {
+            redirect('home');
+        }
+    }
+}
