@@ -3,18 +3,17 @@
 	"name": "ctberdon/sample-blog",
 	"type": "project",
 	"homepage": "https://github.com/ctberdon/sample-blog.git",
-	"license": "MIT",
     "authors": [
         {
             "name": "Carmencito Berdon",
-            "email": "ctberdon@gmail.com"
+            "email": "ctberdon@gmail.com",
+            "homepage": "http://carmencitoberdon.com"
         }
     ],
-	"support": {
-		"source": "https://github.com/ctberdon/sample-blog.git"
-	},
+    "minimum-stability": "dev",
 	"require": {
 		"php": ">=5.2.4"
+        
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"
