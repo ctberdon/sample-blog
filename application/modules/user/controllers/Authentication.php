@@ -15,52 +15,33 @@ class Authentication extends MY_Controller
     
     public function index()
     {
-        /*
-         *  Ensure we've downloaded the oauth credentials
+        /**
+         * If we've got ?code from Google, GOOD
          */
-        if (!$oauth_credentials = $this->googleapi->getOAuthCredentialsFile())
-        {
-            // @todo
-            echo 'Missing credential file';
-            return;
-        }
-
-        // set redirect url which is this controller's page
-        $redirect_uri = base_url('user/authentication/');
-        
-        $client = new Google_Client();
-        $client->setAuthConfig($oauth_credentials);
-        $client->setRedirectUri($redirect_uri);
-        $client->setScopes('email profile');
-        
-        // Turn off SSL here for easy testing on local
-        $guzzle_client = new \GuzzleHttp\Client(array( 'curl' => array( CURLOPT_SSL_VERIFYPEER => false, ), ));
-        $client->setHttpClient($guzzle_client);
-        
         if ($this->input->get('code'))
         {
-            $token = $client->fetchAccessTokenWithAuthCode($this->input->get('code'));
-            $client->setAccessToken($token);
+            $token = $this->google_client->fetchAccessTokenWithAuthCode($this->input->get('code'));
+            $this->google_client->setAccessToken($token);
 
             // store in the session also
             $this->session->set_userdata('token', $token);
 
-            // redirect back
-            redirect($redirect_uri);
+            // redirect back to page in-charge of validating data
+            redirect($this->google_redirect_uri);
         }
         
         /**
          * If we have an access token, we can make
-         * requests, else we generate an authentication URL.
+         * requests, else redirect home
          */
         $token = $this->session->userdata('token');
         if (!empty($token))
         {
-            $client->setAccessToken($token);
+            $this->google_client->setAccessToken($token);
         }
         else
         {
-            $this->template_data['google_auth_url'] = $client->createAuthUrl();
+            redirect('home');
         }
 
         /**
@@ -71,13 +52,13 @@ class Authentication extends MY_Controller
          * to retrieve the Google certificate to verify it,
          * and that can be cached.
          */
-        if ($client->getAccessToken())
+        if ($this->google_client->getAccessToken())
         {
-            $this->template_data['token_data'] = $client->verifyIdToken();
+            $this->template_data['token_data'] = $this->google_client->verifyIdToken();
             
             // retrieve user's information needed to signup
             // into our site
-            $oauth2 = new \Google_Service_Oauth2($client);
+            $oauth2 = new \Google_Service_Oauth2($this->google_client);
             $user_info = $oauth2->userinfo->get();
             
             $db_data = array(
@@ -97,7 +78,7 @@ class Authentication extends MY_Controller
             if ( ! empty($userdata))
             {
                 // debugging line
-                $template_data['userdata'] = $userdata;
+                //$template_data['userdata'] = $userdata;
                 // store to session
                 $this->session->set_userdata('userdata', $userdata);
                 // store user id to session
@@ -105,13 +86,14 @@ class Authentication extends MY_Controller
             }
             
             // debugging line
-            $this->template_data['user_info'] = $user_info;
+            //$this->template_data['user_info'] = $user_info;
             
             // nothing to do here
             redirect('user');
         }
         
-        $this->load->view('default/views/user/authentication_index', $this->template_data);
+        // if else failed
+        redirect('home');
     }
 
     public function logout()

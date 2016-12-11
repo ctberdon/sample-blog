@@ -24,17 +24,18 @@ class Post extends CI_Model
     
     public function getLastPosts($user_id = 'all', $num_of_posts = 5)
     {
-        $this->db->select("P.*, CONCAT_WS(' ', U.first_name, U.last_name) author, U.picture_url");
-        $this->db->order_by('P.published DESC, P.modified DESC');
+        $this->db->select("P.*, CONCAT_WS(' ', U.first_name, U.last_name) author, U.picture_url, U.profile_url");
         $this->db->join('users U', 'P.post_author_id = U.id', 'left');
         
         // determine if whose post to get
         if (is_numeric($user_id) && $user_id > 0)
         {
+            $this->db->order_by('P.created DESC');
             $this->db->where('P.post_author_id', $user_id);
         }
         else
         {
+            $this->db->order_by('P.published DESC, P.modified DESC');
             $this->db->where('P.post_status', 'published');
         }
         
@@ -88,6 +89,24 @@ class Post extends CI_Model
             }
         }
         
+        // do something with the submitted post message
+        if (isset($filtered_data['post_content']))
+        {
+            $filtered_data['post_content'] = nl2br(htmlspecialchars($filtered_data['post_content']));
+        }
+        
+        // and also this
+        if (isset($filtered_data['post_excerpt']))
+        {
+            $filtered_data['post_excerpt'] = nl2br(htmlspecialchars($filtered_data['post_excerpt']));
+        }
+        
+        // as well as this
+        if (isset($filtered_data['post_title']))
+        {
+            $filtered_data['post_title'] = nl2br(htmlspecialchars($filtered_data['post_title']));
+        }
+        
         // is post_status provided?
         (!isset($filtered_data['post_status']) || !in_array($filtered_data['post_status'], array('unpublished', 'published', 'private')))
                 and $filtered_data['post_status'] = 'unpublished';
@@ -131,7 +150,7 @@ class Post extends CI_Model
         return true;
     }
     
-    public function getPosts($post_id, $user_id)
+    public function getPosts($post_id, $user_id, $mode = 'read')
     {
         $this->db->where('id', $post_id);
         $this->db->where('post_author_id', $user_id);
@@ -139,7 +158,17 @@ class Post extends CI_Model
         
         if ($post->num_rows() > 0)
         {
-            return $post->row_array();
+            $post_details = $post->row_array();
+            
+            if (strcasecmp('edit', $mode) == 0)
+            {
+                // revert back nl2br
+                $post_details['post_content'] = br2nl($post_details['post_content']);
+                $post_details['post_excerpt'] = br2nl($post_details['post_excerpt']);
+                $post_details['post_title'] = br2nl($post_details['post_title']);
+            }
+            
+            return $post_details;
         }
         
         return array();
@@ -152,6 +181,50 @@ class Post extends CI_Model
         $post = $this->db->delete($this->table_name);
         
         return true;
+    }
+    
+    public function toggleStatus($post_id, $user_id)
+    {
+        // check if post exists
+        $this->db->where('id', $post_id);
+        $this->db->where('post_author_id', $user_id);
+        $post = $this->db->get($this->table_name);
+        
+        if (empty($post->num_rows()))
+        {
+            return false;
+        }
+        
+        $post_details = $post->row_array();
+        
+        // init update data
+        $db_data = array();
+        
+        // get current status
+        // NOTE: published and unpublished ONLY
+        $db_data['post_status'] = $post_details['post_status'] == 'published' ? 'unpublished' : 'published';
+        $db_data['modified'] = date('Y-m-d H:i:s');
+        $db_data['modified_gmt'] = gmdate('Y-m-d H:i:s');
+        
+        if ( $db_data['post_status'] == 'published' )
+        {
+            $db_data['published'] = date('Y-m-d H:i:s');
+            $db_data['published_gmt'] = date('Y-m-d H:i:s');
+        }
+        
+        // update it now
+        $this->db->where('id', $post_id);
+        $this->db->where('post_author_id', $user_id);
+        $updated = $this->db->update($this->table_name, $db_data);
+        
+        // retrieve back updated status
+        $this->db->select('post_status');
+        $this->db->where('id', $post_id);
+        $this->db->where('post_author_id', $user_id);
+        $post = $this->db->get($this->table_name);
+        
+        // we know that this post exists, so proceed
+        return $post->row_array();
     }
     
 }

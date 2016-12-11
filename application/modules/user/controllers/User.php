@@ -14,14 +14,8 @@ class User extends Private_Controller
     
     public function index()
     {
-        $this->template_data['userdata'] = $this->session->userdata('userdata');
-        $this->load->view('default/views/user/user_index', $this->template_data);
-    }
-    
-    public function home()
-    {
-        $this->template_data['all_last_posts'] = $this->post->getLastPosts('all', 5);
         $this->template_data['user_last_posts'] = $this->post->getLastPosts($this->session->userdata('user_id'), 5);
-        $this->load->view('default/views/user/user_home', $this->template_data);
+        $this->template_data['content'] = $this->load->view(config_item('views_path') . 'user/user_index', $this->template_data, true);
+        $this->load->view(config_item('views_layout'), $this->template_data);
     }
 }

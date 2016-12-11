@@ -227,3 +227,4 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 /user_guide/tutorial/index.html
 /user_guide/tutorial/news_section.html
 /user_guide/tutorial/static_pages.html
+/user_guide

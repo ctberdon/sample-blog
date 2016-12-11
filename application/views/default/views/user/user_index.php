@@ -1,60 +1,32 @@
-<!DOCTYPE HTML>
-<html lang="en">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Login with Google Account by CodexWorld</title>
-<style type="text/css">
-h1
-{
-font-family:Arial, Helvetica, sans-serif;
-color:#999999;
-}
-.wrapper{width:600px; margin-left:auto;margin-right:auto;}
-.welcome_txt{
-	margin: 20px;
-	background-color: #EBEBEB;
-	padding: 10px;
-	border: #D6D6D6 solid 1px;
-	-moz-border-radius:5px;
-	-webkit-border-radius:5px;
-	border-radius:5px;
-}
-.google_box{
-	margin: 20px;
-	background-color: #FFF0DD;
-	padding: 10px;
-	border: #F7CFCF solid 1px;
-	-moz-border-radius:5px;
-	-webkit-border-radius:5px;
-	border-radius:5px;
-}
-.google_box .image{ text-align:center;}
-</style>
-</head>
-<body>
-<?php
-if(!empty($google_auth_url)) {
-	echo '<a href="'.$google_auth_url.'"><img src="'.base_url('themes/default/assets/images/google-signin/1x/btn_google_signin_dark_focus_web.png').'" alt=""/></a>';
-}else{
+<?php include_once __DIR__ .'/posts_form.php' ?>
 
-?>
-<div class="wrapper">
-    <h1>Google Profile Details </h1>
-    <?php
-    echo '<div class="welcome_txt">Welcome <b>'.$userdata['first_name'].'</b></div>';
-    echo '<div class="google_box">';
-    echo '<p class="image"><img src="'.$userdata['picture_url'].'" alt="" width="300"/></p>';
-    echo '<p><b>Google ID : </b>' . $userdata['oauth_uid'].'</p>';
-    echo '<p><b>Name : </b>' . $userdata['first_name'].' '.$userdata['last_name'].'</p>';
-    echo '<p><b>Email : </b>' . $userdata['email'].'</p>';
-    echo '<p><b>Gender : </b>' . $userdata['gender'].'</p>';
-    echo '<p><b>Locale : </b>' . $userdata['locale'].'</p>';
-    echo '<p><b>Google+ Link : </b>' . $userdata['profile_url'].'</p>';
-    echo '<p><b>You are login with : </b>Google</p>';
-    echo '<p><b>Logout from <a href="'.base_url().'user/authentication/logout">Google</a></b></p>';
-    echo '</div>';
-    ?>
-</div>
-<?php } ?>
-</body>
-</html>
+<h2>Your Activity</h2>
+<?php if (!empty($user_last_posts)) : ?>
+    <?php foreach ($user_last_posts as $post) : ?>
+
+        <div class="blog-post blog-post-container" data-post-id="<?php echo $post['id'] ?>">
+            <h2 class="blog-post-title">
+                <?php echo $post['post_title'] ?>
+                <div class="pull-right">
+                    <a class="btn btn-warning btn-sm edit-blog-button" title="Edit post" data-post-id="<?php echo $post['id'] ?>" href="<?php echo site_url("user/posts/edit_post/{$post['id']}") ?>"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
+                    <a class="btn btn-danger btn-sm remove-blog-button" title="Remove post" data-post-id="<?php echo $post['id'] ?>" href="<?php echo site_url("user/posts/remove_post/{$post['id']}") ?>"><i class="fa fa-remove" aria-hidden="true"></i> Remove</a>
+                    <a class="btn btn-sm toggle-blog-button <?php echo strcasecmp($post['post_status'], 'published') == 0 ? 'btn-success' : 'btn-default' ?>" title="Click to <?php echo strcasecmp($post['post_status'], 'published') == 0 ? 'Unpublished' : 'Published' ?>" data-post-id="<?php echo $post['id'] ?>" href="<?php echo site_url("user/posts/toggle_status/{$post['id']}") ?>"><?php echo strcasecmp($post['post_status'], 'published') == 0 ? 'Published' : 'Unpublished' ?></a>
+                </div>
+            </h2>
+            <p class="blog-post-meta">
+                Created on <?php echo date('D, M d, Y h:m A', strtotime($post['created'])) ?>
+                <?php if (strcasecmp($post['post_status'], 'published') == 0) : ?>
+                    <br />Published on <?php echo date('D, M d, Y h:mA', strtotime($post['published'])) ?>
+                <?php endif; ?>
+
+                <?php if ($post['published'] != $post['modified']) : ?>
+                    <br />Updated on <?php echo date('D, M d, Y h:mA', strtotime($post['modified'])) ?>
+                <?php endif; ?>
+            </p>
+            <p><?php echo $post['post_content'] ?></p>
+        </div>
+
+    <?php endforeach; ?>
+<?php else : ?>
+    <p>You have no posts yet.</p>
+<?php endif; ?>

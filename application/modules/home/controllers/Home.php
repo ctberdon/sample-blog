@@ -9,12 +9,6 @@ class Home extends Public_Controller
     {
         parent::__construct();
         
-        // is user authenticated?
-        if (is_loggedin() === true)
-        {
-            redirect('user');
-        }
-        
         // Load required models
         $this->load->model('post');
     }
@@ -22,7 +16,8 @@ class Home extends Public_Controller
     public function index()
     {
         $this->template_data['last_posts'] = $this->post->getLastPosts('all', 5);
-        $this->load->view('default/views/home/home_index', $this->template_data);
+        $this->template_data['content'] = $this->load->view(config_item('views_path') . 'home/home_index', $this->template_data, true);
+        $this->load->view(config_item('views_layout'), $this->template_data);
     }
     
 }
