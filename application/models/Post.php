@@ -125,7 +125,8 @@ class Post extends CI_Model
             $found = $this->db->get_where($this->table_name, array('id' => $data['id']));
             
             // really exists?
-            if ( empty($found->num_rows()))
+            $rows = $found->num_rows();
+            if ( empty($rows))
             {
                 throw new Exception('Invalid post id');
             }
@@ -190,7 +191,8 @@ class Post extends CI_Model
         $this->db->where('post_author_id', $user_id);
         $post = $this->db->get($this->table_name);
         
-        if (empty($post->num_rows()))
+        $rows = $post->num_rows();
+        if (empty($rows))
         {
             return false;
         }

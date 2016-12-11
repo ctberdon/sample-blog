@@ -5,7 +5,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 function is_loggedin()
 {
     $CI =& get_instance();
-    return empty($CI->session->userdata('userdata')) ? false : true;
+    $userdata = $CI->session->userdata('userdata');
+    return empty($userdata) ? false : true;
 }
 
 function get_controllername()

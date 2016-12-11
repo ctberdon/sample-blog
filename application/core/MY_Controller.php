@@ -87,7 +87,8 @@ class Private_Controller extends MY_Controller
     {
         parent::__construct();
         
-        if ( empty($this->session->userdata('userdata')) )
+        $userdata = $this->session->userdata('userdata');
+        if ( empty($userdata) )
         {
             redirect('user/authentication');
         }
