@@ -13,7 +13,7 @@ A demo blog for client
 
 - `composer create-project "ctberdon/sample-blog:dev-master" <installation_directory>`
 
-### Configuration
+## Configuration
 
 - Import Database structure from `sample-blog.sql` file.
 - Set database connection in `application/config/database.php`.
