@@ -66,7 +66,7 @@
 
             <div class="blog-header">
                 <h1 class="blog-title"><?php echo config_item('sitename') ?></h1>
-                <p class="lead blog-description">A demo blog</p>
+                <p class="lead blog-description">A demo blog with markdown text support</p>
             </div>
 
             <div class="row">

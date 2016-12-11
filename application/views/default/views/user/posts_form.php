@@ -28,7 +28,7 @@
                 <?php echo form_input('post_title', set_value('post_title', !empty($post_details['post_title']) ? $post_details['post_title'] : ''), array('id' => 'post_title', 'class' => 'form-control', 'placeholder' => 'Title')) ?>
             </div>
             <div class="form-group">
-                <?php echo form_textarea(array('id' => 'post_content', 'class' => 'form-control', 'rows' => '10', 'placeholder' => 'Content'), set_value('post_content', !empty($post_details['post_content']) ? $post_details['post_content'] : ''), array('name' => 'post_content')) ?>
+                <?php echo form_textarea(array('id' => 'post_content', 'class' => 'form-control', 'rows' => '10', 'placeholder' => 'Content (Markdown text is supported)'), set_value('post_content', !empty($post_details['post_content']) ? $post_details['post_content'] : ''), array('name' => 'post_content')) ?>
             </div>
             <div class="form-group">
                 <?php echo form_label('Status', 'post_status') ?>
