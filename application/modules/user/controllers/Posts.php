@@ -188,4 +188,27 @@ class Posts extends Private_Controller
         redirect('user');
     }
     
+    public function preview_markdown()
+    {
+        // this is strictly for ajax call
+        if ( ! $this->input->is_ajax_request())
+        {
+            // get out please
+            // show this guy a 404
+            show_404();
+        }
+        
+        // strictly POST
+        $post_content = $this->input->post('post_content');
+        // htmlentities you like?
+        $post_content = nl2br(htmlentities($post_content));
+        
+        $data = array(
+            'status'  => 'success',
+            'message' => $this->markdown->parse($post_content),
+        );
+
+        $this->output->set_output(json_encode($data));
+    }
+    
 }

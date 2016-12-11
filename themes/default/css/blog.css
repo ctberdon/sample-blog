@@ -188,6 +188,22 @@ h6, .h6 {
 /*
  * Blog Form
  */
-.blog-form {
+.blog-form, .markdown-preview-area {
   font-size: 14px;
+}
+.markdown-preview-area {
+  height: 300px;
+  border: 1px solid #ccc;
+  overflow: auto;
+}
+
+/*
+ * Blog effects
+ */
+.blog-post-editable div.edit-buttons > a.btn.hide-me {
+    display: none !important;
+}
+
+.blog-post-editable.hover div.edit-buttons > a.btn.hide-me {
+    display: inline-block !important;
 }

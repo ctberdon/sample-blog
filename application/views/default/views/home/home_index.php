@@ -9,7 +9,7 @@
                     <br />Updated on <?php echo date('D, M d, Y h:m A', strtotime($post['modified'])) ?>
                 <?php endif; ?>
             </p>
-            <p><?php echo !empty($post['post_content']) ? $post['post_content'] : '' ?></p>
+            <p><?php echo !empty($post['post_content']) ? render_markdown($post['post_content']) : '' ?></p>
         </div><!-- /.blog-post -->
     <?php endforeach; ?>
 <?php else : ?>

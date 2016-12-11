@@ -66,12 +66,12 @@ class Post extends CI_Model
         }
         
         // get total records
-        $count_query = $main_sql;
+        $count_query = clone $main_sql;
         $count_query->select('COUNT(*) total_records');
         $total_query = $count_query->get($this->table_name . ' P');
         
         // debug
-        //error_log($this->db->last_query());
+        //error_log($count_query->last_query());
         
         // init $total_records
         $total_records = 0;
@@ -90,8 +90,6 @@ class Post extends CI_Model
         $offset = ($page - 1) * $post_per_page;
         
         // run main query
-        // previously joint table got lost
-        $main_sql->join('users U', 'P.post_author_id = U.id', 'left');
         $main_sql->select("P.*, CONCAT_WS(' ', U.first_name, U.last_name) author, U.picture_url, U.profile_url");
         $posts = $main_sql->get($this->table_name . ' P', $post_per_page, $offset);
         
@@ -155,19 +153,19 @@ class Post extends CI_Model
         // do something with the submitted post message
         if (isset($filtered_data['post_content']))
         {
-            $filtered_data['post_content'] = nl2br(htmlspecialchars($filtered_data['post_content']));
+            $filtered_data['post_content'] = nl2br(htmlentities($filtered_data['post_content']));
         }
         
         // and also this
         if (isset($filtered_data['post_excerpt']))
         {
-            $filtered_data['post_excerpt'] = nl2br(htmlspecialchars($filtered_data['post_excerpt']));
+            $filtered_data['post_excerpt'] = nl2br(htmlentities($filtered_data['post_excerpt']));
         }
         
         // as well as this
         if (isset($filtered_data['post_title']))
         {
-            $filtered_data['post_title'] = nl2br(htmlspecialchars($filtered_data['post_title']));
+            $filtered_data['post_title'] = nl2br(htmlentities($filtered_data['post_title']));
         }
         
         // is post_status provided?
@@ -227,9 +225,9 @@ class Post extends CI_Model
             if (strcasecmp('edit', $mode) == 0)
             {
                 // revert back nl2br
-                $post_details['post_content'] = br2nl($post_details['post_content']);
-                $post_details['post_excerpt'] = br2nl($post_details['post_excerpt']);
-                $post_details['post_title'] = br2nl($post_details['post_title']);
+                $post_details['post_content'] = html_entity_decode(br2nl($post_details['post_content']));
+                $post_details['post_excerpt'] = html_entity_decode(br2nl($post_details['post_excerpt']));
+                $post_details['post_title'] = html_entity_decode(br2nl($post_details['post_title']));
             }
             
             return $post_details;

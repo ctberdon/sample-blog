@@ -36,4 +36,38 @@
             });
         }
     });
+    
+    $('body').on('mouseenter mouseleave', '.blog-post-editable', function(e) {
+        $(this)[e.type == 'mouseleave' ? 'removeClass' : 'addClass']('hover');
+    });
+    
+    var old_post_content_value = '';
+    $('#blog-form').on('change keyup paste', 'textarea[name=post_content]', function(e) {
+        var _this = $(this); // cache object
+        var _thisform = $('#markdown-preview-area');
+        var _target_form = $('#blog-form');
+        
+        // prevent multiple triggering
+        var _currentval = _this.val();
+        if (_currentval == old_post_content_value) {
+            return; //check to prevent multiple simultaneous triggers
+        }
+        // store this value as old
+        old_post_content_value = _currentval;
+        
+        $.ajax({
+            method: "POST",
+            url: _thisform.attr('data-url') + '?_=' + new Date().getTime(),
+            dataType: "json",
+            data: _target_form.serialize()
+        })
+        .done(function (response) {
+            if (typeof response.status != 'undefined' && response.status.match(/^success/i)) {
+                _thisform.html(response.message);
+            }
+        });
+    });
+    
+    // init markdown render on editing
+    $('textarea[name=post_content]', '#blog-form').change();
 })();

@@ -20,6 +20,12 @@ function br2nl($string)
     return preg_replace('/\<br(\s*)?\/?\>/i', "", $string);
 }
 
+function render_markdown($string)
+{
+    $CI =& get_instance();
+    return $CI->markdown->parse($string);
+}
+
 function array_sanitizer(array $data)
 {
     if (empty($data))
