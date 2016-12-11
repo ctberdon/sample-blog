@@ -1,6 +1,6 @@
 # Sample Simple Blog
 
-A demo blog for client
+A demo blog for client with markdown text support
 
 ## Install
 
