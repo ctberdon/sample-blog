@@ -16,6 +16,9 @@ class Posts extends Private_Controller
         $this->load->library('form_validation');
     }
     
+    /**
+     * Add or update post
+     */
     public function update_post()
     {
         // we require POST data
@@ -60,6 +63,11 @@ class Posts extends Private_Controller
         redirect('user');
     }
     
+    /**
+     * Edit post with given id
+     * 
+     * @param int $post_id Post id
+     */
     public function edit_post($post_id)
     {
         $this->template_data['post_details'] = $this->post->getPost($post_id, $this->session->userdata('user_id'), 'edit');
@@ -74,6 +82,12 @@ class Posts extends Private_Controller
         $this->load->view(config_item('views_layout'), $this->template_data);
     }
     
+    /**
+     * Remove post with given id
+     * 
+     * @param int $post_id
+     * @return mixed
+     */
     public function remove_post($post_id = '')
     {
         if (empty($post_id))
@@ -121,6 +135,12 @@ class Posts extends Private_Controller
         redirect('user');
     }
     
+    /**
+     * Toggle published and unpublished status of the post
+     * 
+     * @param int $post_id
+     * @return mixed
+     */
     public function toggle_status($post_id = '')
     {
         if (empty($post_id))
@@ -188,6 +208,9 @@ class Posts extends Private_Controller
         redirect('user');
     }
     
+    /**
+     * Markdown text viewer. Called via AJAX request.
+     */
     public function preview_markdown()
     {
         // this is strictly for ajax call

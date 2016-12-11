@@ -220,6 +220,93 @@ class Post extends CI_Model
         return true;
     }
     
+    public function insertRandomPost(array $data)
+    {
+        // sanitize data
+        $data = array_sanitizer($data);
+        
+        // filtered data
+        $filtered_data = array();
+        
+        $allowed_data = array(
+            'post_author_id',
+            'post_title',
+            'post_excerpt',
+            'post_content',
+            'post_status',
+        );
+        
+        $required_data = array(
+            'post_author_id',
+            'post_title',
+            'post_content',
+        );
+        
+        // now check submitted data
+        foreach ($allowed_data as $field_name)
+        {
+            if ( isset($data[$field_name]))
+            {
+                $filtered_data[$field_name] = $data[$field_name];
+            }
+        }
+        
+        // check if required data are provided
+        foreach ($required_data as $field_name)
+        {
+            if ( empty($filtered_data[$field_name]))
+            {
+                throw new Exception("$field_name is required");
+            }
+        }
+        
+        // WARNING!!!
+        // We will store message as is
+        
+        // is post_status provided?
+        (!isset($filtered_data['post_status']) || !in_array($filtered_data['post_status'], array('unpublished', 'published', 'private')))
+                and $filtered_data['post_status'] = 'unpublished';
+        // is published?
+        if ( strcasecmp($filtered_data['post_status'], 'published') == 0 )
+        {
+            $filtered_data['published'] = date('Y-m-d H:i:s');
+            $filtered_data['published_gmt'] = date('Y-m-d H:i:s');
+        }
+        
+        // now check if this is edit
+        if ( ! empty($data['id']))
+        {
+            // we're going to make sure this is a valid post we are editing
+            $this->db->select('id');
+            $found = $this->db->get_where($this->table_name, array('id' => $data['id']));
+            
+            // really exists?
+            $rows = $found->num_rows();
+            if ( empty($rows))
+            {
+                throw new Exception('Invalid post id');
+            }
+            
+            $filtered_data['modified'] = date('Y-m-d H:i:s');
+            $filtered_data['modified_gmt'] = gmdate('Y-m-d H:i:s');
+            
+            $this->db->where('id', $data['id']);
+            $updated = $this->db->update($this->table_name, $filtered_data);
+            
+            return true;
+        }
+        
+        // so, we are adding
+        $filtered_data['created']  = date('Y-m-d H:i:s');
+        $filtered_data['modified'] = date('Y-m-d H:i:s');
+        $filtered_data['modified_gmt'] = gmdate('Y-m-d H:i:s');
+        
+        $inserted = $this->db->insert($this->table_name, $filtered_data);
+        
+        // say yes
+        return true;
+    }
+    
     public function getPost($post_id, $user_id, $mode = 'read')
     {
         $this->db->where('id', $post_id);

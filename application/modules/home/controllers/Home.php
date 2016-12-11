@@ -13,6 +13,11 @@ class Home extends Public_Controller
         $this->load->model('post');
     }
     
+    /**
+     * List down all published post from all users
+     * 
+     * @param int $page Page number
+     */
     public function index($page = 1)
     {
         // check page if valid

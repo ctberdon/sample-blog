@@ -1,6 +1,6 @@
 <?php include_once __DIR__ .'/posts_form.php' ?>
 
-<h2>Your Activity</h2>
+<h2>Your Activity <a class="btn btn-sm btn-danger" title="This will generate random posts for you" href="<?php echo site_url('user/generate_random_post') ?>">Generate Random Post</a></h2>
 <?php if (!empty($user_posts)) : ?>
     <?php foreach ($user_posts as $post) : ?>
 

@@ -41,6 +41,11 @@
         $(this)[e.type == 'mouseleave' ? 'removeClass' : 'addClass']('hover');
     });
     
+    $('body').on('submit', '#random-post-generator-form', function (e) {
+        // disable submit button
+        $(':input[type=submit]', '#random-post-generator-form').attr('disabled', true);
+    });
+    
     var old_post_content_value = '';
     $('#blog-form').on('change keyup paste', 'textarea[name=post_content]', function(e) {
         var _this = $(this); // cache object
