@@ -6,7 +6,7 @@ A demo blog for client
 
 ### Requirements
 
-- [PHP][4] version 5.5.x or newer
+- [PHP][1] version 5.5.x or newer
 
 ### Composer
 
@@ -20,3 +20,5 @@ A demo blog for client
 ## Author
 
 - Carmencito Berdon <me@carmencitoberdon.com>
+
+[1]: http://php.net
