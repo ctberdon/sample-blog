@@ -109,7 +109,13 @@ class Post extends CI_Model
             );
         }
         
-        return array();
+        return array(
+            'total_records'    => 0,
+            'current_page'     => 1,
+            'total_pages'      => 1,
+            'records_per_page' => $post_per_page,
+            'records'          => array(),
+        );
     }
     
     public function insertOrUpdatePost(array $data)
