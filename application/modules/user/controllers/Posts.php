@@ -38,7 +38,13 @@ class Posts extends Private_Controller
         {
             // Invalid form data
             $this->session->set_flashdata('form_validation_errors', validation_errors());
-            redirect('user');
+            // Repopulate POST
+            $this->session->set_flashdata('raw_post', $this->input->post());
+            // check for referer
+            $redirect = $this->input->post('referer', '') == 'edit_post' && $this->input->get_post('id', '') != '' ?
+                    'user/posts/edit_post/' . $this->input->get_post('id', '') :
+                    'user';
+            redirect($redirect);
         }
         
         $db_data = $this->input->post();
@@ -56,6 +62,8 @@ class Posts extends Private_Controller
         {
             // Invalid form data
             $this->session->set_flashdata('form_validation_errors', $ex->getMessage());
+            // Repopulate POST
+            $this->session->set_flashdata('raw_post', $this->input->post());
             redirect('user');
         }
 
@@ -78,6 +86,16 @@ class Posts extends Private_Controller
             redirect('user');
         }
         
+        // dirty secret for redirected POST
+        // do not try this at home
+        // this is only to compensate adding more AJAX
+        $flasdata_post = $this->session->flashdata('raw_post');
+        if ( ! empty($flasdata_post))
+        {
+            $_POST = $flasdata_post;
+        }
+        
+        $this->template_data['referer'] = 'edit_post';
         $this->template_data['content'] = $this->load->view(config_item('views_path') . 'user/posts_form', $this->template_data, true);
         $this->load->view(config_item('views_layout'), $this->template_data);
     }

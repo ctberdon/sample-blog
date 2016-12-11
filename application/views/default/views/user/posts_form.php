@@ -24,6 +24,7 @@
 
         <?php echo form_open(site_url('user/posts/update_post'), array('id' => 'blog-form', 'class' => 'blog-form')) ?>
         <?php echo form_hidden('id', set_value('id', !empty($post_details['id']) ? $post_details['id'] : '')) ?>
+        <?php echo form_hidden('referer', !empty($referer) ? $referer : '') ?>
             <div class="form-group">
                 <?php echo form_input('post_title', set_value('post_title', !empty($post_details['post_title']) ? $post_details['post_title'] : ''), array('id' => 'post_title', 'class' => 'form-control', 'placeholder' => 'Title')) ?>
             </div>

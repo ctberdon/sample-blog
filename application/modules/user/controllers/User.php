@@ -32,6 +32,15 @@ class User extends Private_Controller
             'previous_page' => $all_posts['current_page'] >= 2 && $all_posts['total_pages'] > 0 ? $all_posts['current_page'] - 1 : 0,
             'total_pages'   => $all_posts['total_pages'],
         );
+        
+        // dirty secret for redirected POST
+        // do not try this at home
+        // this is only to compensate adding more AJAX
+        $flasdata_post = $this->session->flashdata('raw_post');
+        if ( ! empty($flasdata_post))
+        {
+            $_POST = $flasdata_post;
+        }
 
         $this->template_data['user_posts'] = $all_posts['records'];
         $this->template_data['content'] = $this->load->view(config_item('views_path') . 'user/user_index', $this->template_data, true);
