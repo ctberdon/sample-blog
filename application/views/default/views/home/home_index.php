@@ -1,5 +1,5 @@
-<?php if ( ! empty($last_posts)) : ?>
-    <?php foreach ($last_posts as $post) : ?>
+<?php if ( ! empty($all_posts)) : ?>
+    <?php foreach ($all_posts as $post) : ?>
         <div class="blog-post">
             <h2 class="blog-post-title"><?php echo $post['post_title'] ?></h2>
             <p class="blog-post-meta">

@@ -1,8 +1,8 @@
 <?php include_once __DIR__ .'/posts_form.php' ?>
 
 <h2>Your Activity</h2>
-<?php if (!empty($user_last_posts)) : ?>
-    <?php foreach ($user_last_posts as $post) : ?>
+<?php if (!empty($user_posts)) : ?>
+    <?php foreach ($user_posts as $post) : ?>
 
         <div class="blog-post blog-post-container" data-post-id="<?php echo $post['id'] ?>">
             <h2 class="blog-post-title">

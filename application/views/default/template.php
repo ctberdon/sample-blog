@@ -75,12 +75,19 @@
 
                     <?php echo!empty($content) ? $content : '' ?>
 
+                    <?php if ( ! empty($pagination)) : ?>
                     <nav>
                         <ul class="pager">
-                            <li><a href="#">Previous</a></li>
-                            <li><a href="#">Next</a></li>
+                            <?php if ( ! empty($pagination['previous_page'])) : ?>
+                            <li><a href="<?php echo $pagination['base_url'].$pagination['previous_page'] ?>">Previous</a></li>
+                            <?php endif; ?>
+                            
+                            <?php if ( ! empty($pagination['next_page'])) : ?>
+                            <li><a href="<?php echo $pagination['base_url'].$pagination['next_page'] ?>">Next</a></li>
+                            <?php endif; ?>
                         </ul>
                     </nav>
+                    <?php endif; ?>
 
                 </div><!-- /.blog-main -->
 

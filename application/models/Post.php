@@ -49,6 +49,69 @@ class Post extends CI_Model
         return array();
     }
     
+    public function getPosts($user_id = 'all', $page = 1, $post_per_page = 5)
+    {
+        $main_sql = $this->db->join('users U', 'P.post_author_id = U.id', 'left');
+        
+        // determine if whose post to get
+        if (is_numeric($user_id) && $user_id > 0)
+        {
+            $main_sql->order_by('P.created DESC');
+            $main_sql->where('P.post_author_id', $user_id);
+        }
+        else
+        {
+            $main_sql->order_by('P.published DESC, P.modified DESC');
+            $main_sql->where('P.post_status', 'published');
+        }
+        
+        // get total records
+        $count_query = $main_sql;
+        $count_query->select('COUNT(*) total_records');
+        $total_query = $count_query->get($this->table_name . ' P');
+        
+        // debug
+        //error_log($this->db->last_query());
+        
+        // init $total_records
+        $total_records = 0;
+        // now get $total_records
+        if ($total_query->num_rows() > 0)
+        {
+            $rows = $total_query->row_array();
+            $total_records = $rows['total_records'];
+        }
+        
+        // get max page
+        $max_page = (int)ceil($total_records/$post_per_page);
+        $page > $max_page and $page = $max_page;
+        
+        // compute offset
+        $offset = ($page - 1) * $post_per_page;
+        
+        // run main query
+        // previously joint table got lost
+        $main_sql->join('users U', 'P.post_author_id = U.id', 'left');
+        $main_sql->select("P.*, CONCAT_WS(' ', U.first_name, U.last_name) author, U.picture_url, U.profile_url");
+        $posts = $main_sql->get($this->table_name . ' P', $post_per_page, $offset);
+        
+        // debug
+        //error_log($this->db->last_query());
+        
+        if ($posts->num_rows() > 0)
+        {
+            return array(
+                'total_records'    => $total_records,
+                'current_page'     => $page,
+                'total_pages'      => $max_page,
+                'records_per_page' => $post_per_page,
+                'records'          => $posts->result_array(),
+            );
+        }
+        
+        return array();
+    }
+    
     public function insertOrUpdatePost(array $data)
     {
         // sanitize data
@@ -151,7 +214,7 @@ class Post extends CI_Model
         return true;
     }
     
-    public function getPosts($post_id, $user_id, $mode = 'read')
+    public function getPost($post_id, $user_id, $mode = 'read')
     {
         $this->db->where('id', $post_id);
         $this->db->where('post_author_id', $user_id);
@@ -175,7 +238,7 @@ class Post extends CI_Model
         return array();
     }
     
-    public function deletePosts($post_id, $user_id)
+    public function deletePost($post_id, $user_id)
     {
         $this->db->where('id', $post_id);
         $this->db->where('post_author_id', $user_id);

@@ -8,3 +8,6 @@ $config['layout'] = "template"; // main template file
 $config['theme_url'] = "themes/{$config['theme']}/";
 $config['views_path'] = "{$config['theme']}/views/";
 $config['views_layout'] = "{$config['theme']}/{$config['layout']}";
+
+// Pagination
+$config['records_per_page'] = 5;

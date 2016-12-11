@@ -62,7 +62,7 @@ class Posts extends Private_Controller
     
     public function edit_post($post_id)
     {
-        $this->template_data['post_details'] = $this->post->getPosts($post_id, $this->session->userdata('user_id'), 'edit');
+        $this->template_data['post_details'] = $this->post->getPost($post_id, $this->session->userdata('user_id'), 'edit');
         
         if (empty($this->template_data['post_details']))
         {
@@ -102,7 +102,7 @@ class Posts extends Private_Controller
             }
         }
         
-        $this->post->deletePosts($post_id, $this->session->userdata('user_id'));
+        $this->post->deletePost($post_id, $this->session->userdata('user_id'));
         
         // is ajax request?
         if ($this->input->is_ajax_request())
