@@ -54,7 +54,7 @@
                             <?php if ( ! empty($userdata['picture_url'])) : ?>
                             <img src="<?php echo $userdata['picture_url'] ?>" width="30" />
                             <?php endif; ?>
-                            Welcome <b><?php echo $userdata['first_name'] ?>!</b>
+                            Welcome <b><a href="<?php echo !empty($userdata['profile_url']) ? $userdata['profile_url'] : '#' ?>" target="_blank"><?php echo $userdata['first_name'] ?></a>!</b>
                             (<a href="<?php echo site_url('user/authentication/logout') ?>">Logout</a>)
                         </div>
                     <?php endif; ?>

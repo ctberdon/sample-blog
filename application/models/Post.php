@@ -88,6 +88,8 @@ class Post extends CI_Model
         
         // compute offset
         $offset = ($page - 1) * $post_per_page;
+        // fix for offset going negative
+        $offset < 0 and $offset = 0;
         
         // run main query
         $main_sql->select("P.*, CONCAT_WS(' ', U.first_name, U.last_name) author, U.picture_url, U.profile_url");
