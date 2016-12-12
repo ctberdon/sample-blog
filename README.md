@@ -18,7 +18,7 @@ A demo blog for client with markdown text support
 - If you are to install the project locally, it is advisable to run it under localhost domain name ending with `.com`, `.org` ... e.g. `sample-blog.local.com` or any domain extension as long as Google API redirect validates it.
 - Import Database structure from `sample-blog.sql` file.
 - Set database connection in `application/config/database.php`.
-- Make `application/sessions` directory writable. This is by default where CodeIgniter stores session files. You can modify this setting in `appplication/config/config.php`.
+- Make `application/sessions` directory writable. This is by default where the project stores session files. You can modify this setting in `appplication/config/config.php`.
 - Obtain a Google API Credentials from Google Developers Console – [https://console.developers.google.com/][3]. If you don't know how to create one, please see this [post][4]. Under `Credentials`, click the Project you have just created and download your API Key file by pressing `Download JSON` button. Place the file in `application/libraries/google-api-php-client/` and named it as `oauth-credentials.json`. Replace the one provided.
 
 ## Author
